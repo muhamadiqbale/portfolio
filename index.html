@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aplikasi Pengajuan & Reporting</title>
+  <style>
+    :root{--navy:#173b70;--blue:#2563eb;--bg:#f3f6fb;--ink:#182230;--muted:#64748b;--line:#dbe3ee;--white:#fff;--red:#b91c1c;--green:#15803d}
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+    button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;font-weight:700}
+    .btn-primary{background:var(--blue);color:#fff}.btn-secondary{background:#e8eef7;color:#173b70}.btn-danger{background:#fee2e2;color:#991b1b}.btn-small{padding:7px 10px;font-size:12px}
+    .hidden{display:none!important}.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px}.login-card{background:white;width:min(420px,100%);padding:30px;border-radius:18px;box-shadow:0 12px 40px #10264b18}
+    h1,h2,h3,p{margin-top:0}.login-card h1{font-size:25px;color:var(--navy);margin-bottom:8px}.muted{color:var(--muted);font-size:13px;line-height:1.5}
+    label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}input,textarea,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);outline:none}
+    input:focus,textarea:focus,select:focus{border-color:#6b9af4;box-shadow:0 0 0 3px #2563eb16}textarea{min-height:90px;resize:vertical}.field{margin-bottom:15px}
+    .error{background:#fef2f2;color:var(--red);padding:10px;border-radius:8px;font-size:13px;margin:12px 0}.success{background:#f0fdf4;color:var(--green);padding:10px;border-radius:8px;font-size:13px;margin:12px 0}
+    .app{min-height:100vh;display:grid;grid-template-columns:245px 1fr}.sidebar{background:var(--navy);color:#fff;padding:22px 15px;display:flex;flex-direction:column;gap:8px}
+    .brand{font-size:18px;font-weight:800;line-height:1.35;padding:0 10px 18px;border-bottom:1px solid #ffffff25;margin-bottom:8px}.brand small{display:block;font-size:11px;color:#c9d8f0;font-weight:400;margin-top:5px}
+    .nav-btn{width:100%;text-align:left;background:transparent;color:#dbeafe;padding:12px;border-radius:9px}.nav-btn.active,.nav-btn:hover{background:#ffffff1c;color:#fff}.sidebar-bottom{margin-top:auto;padding:10px;color:#dbeafe;font-size:12px}
+    .main{min-width:0}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:15px}
+    .topbar h2{margin:0;font-size:19px}.content{padding:26px;max-width:1400px;margin:auto}.page-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.page-head h2{margin:0;font-size:23px}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:22px}
+    .card,.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 3px 12px #10264b05}.card .label{font-size:13px;color:var(--muted)}.card .number{font-size:27px;font-weight:800;margin:10px 0 4px;color:var(--navy)}.card .small{font-size:12px;color:var(--muted)}
+    .panel h3{font-size:16px;margin-bottom:15px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:12px;border-bottom:1px solid #edf1f6;vertical-align:top}th{color:#53647a;background:#f8fafc;font-size:12px}td .actions{display:flex;gap:6px;flex-wrap:wrap}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#eaf1ff;color:#1d4ed8;font-size:11px;font-weight:700}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.full{grid-column:1/-1}.form-title{font-size:15px;font-weight:800;margin:22px 0 12px;color:var(--navy);padding-bottom:8px;border-bottom:1px solid var(--line)}
+    .logo-row{display:flex;align-items:flex-start;gap:18px}.logo-preview{width:115px;height:90px;border:1px dashed #b9c6d8;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#7b8798;font-size:11px;text-align:center;background:#f8fafc;flex-shrink:0}.logo-preview img{max-width:100%;max-height:100%;object-fit:contain}
+    .item-table input{min-width:95px;padding:8px}.item-table .item-name{min-width:160px}.item-table .item-note{min-width:140px}.item-table td{padding:6px}.item-table th{padding:9px 6px}
+    .total-box{background:#eef4ff;padding:15px;border-radius:10px;text-align:right;font-size:18px;font-weight:800;color:var(--navy);margin-top:12px}
+    .sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.signature-box{border:1px solid var(--line);padding:12px;border-radius:10px}.signature-canvas{width:100%;height:140px;border:1px dashed #aab8cb;border-radius:8px;touch-action:none;background:#fff;display:block;margin:10px 0}
+    .filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.filters input{max-width:280px}.empty{padding:28px;text-align:center;color:var(--muted)}.toast{position:fixed;bottom:20px;right:20px;background:#142b4d;color:#fff;padding:13px 18px;border-radius:10px;box-shadow:0 8px 25px #0002;z-index:99;max-width:90vw}
+    .loading{opacity:.6;pointer-events:none}.help{font-size:12px;color:var(--muted);margin-top:5px}.history-list{display:grid;gap:10px}.history-item{border-bottom:1px solid #edf1f6;padding:10px 0;display:flex;justify-content:space-between;gap:12px;font-size:13px}
+    @media(max-width:1000px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.app{grid-template-columns:205px 1fr}.content{padding:20px}}
+    @media(max-width:700px){.app{display:block}.sidebar{padding:12px;display:flex;flex-direction:row;overflow:auto;align-items:center}.brand{display:none}.nav-btn{width:auto;white-space:nowrap;padding:10px}.sidebar-bottom{display:none}.topbar{padding:0 16px;height:60px}.content{padding:15px}.cards{grid-template-columns:1fr 1fr;gap:9px}.card{padding:14px}.card .number{font-size:21px}.form-grid,.sign-grid{grid-template-columns:1fr}.full{grid-column:auto}.page-head{align-items:flex-start;flex-direction:column}.logo-row{flex-direction:column}.topbar h2{font-size:16px}}
+  </style>
+</head>
+<body>
+  <section id="loginScreen" class="login-wrap">
+    <div class="login-card">
+      <h1>Pengajuan & Reporting</h1>
+      <p class="muted">Masuk menggunakan akun yang diberikan admin.</p>
+      <form id="loginForm">
+        <div class="field"><label for="loginUsername">Username</label><input id="loginUsername" autocomplete="username" required placeholder="Contoh: admin"></div>
+        <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Masukkan password"></div>
+        <div id="loginError" class="error hidden"></div>
+        <button class="btn-primary" style="width:100%" type="submit">Login</button>
+      </form>
+      <p class="help" style="margin-top:16px">Saat pertama kali dipasang, gunakan akun awal dari petunjuk instalasi. Ganti password setelah login.</p>
+    </div>
+  </section>
+
+  <section id="appScreen" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand">Pengajuan & Reporting<small>Administrasi proyek</small></div>
+      <button class="nav-btn active" data-page="dashboard">▦ Dashboard</button>
+      <button class="nav-btn" data-page="pengajuan">▤ Total Pengajuan</button>
+      <button class="nav-btn" data-page="reporting">▤ Total Reporting</button>
+      <button class="nav-btn" data-page="history">◷ History Aktivitas</button>
+      <button class="nav-btn" data-page="password">⚙ Ganti Password</button>
+      <div class="sidebar-bottom">Login sebagai <strong id="sideUsername">-</strong></div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><h2 id="topTitle">Dashboard</h2><button id="logoutBtn" class="btn-secondary">Logout</button></header>
+      <div class="content">
+        <section id="page-dashboard" class="page">
+          <div class="page-head"><div><h2>Dashboard</h2><p class="muted">Ringkasan data pengajuan dan reporting.</p></div></div>
+          <div class="cards">
+            <div class="card"><div class="label">Total Pengajuan</div><div id="dashPengajuan" class="number">0</div><div class="small">dokumen tersimpan</div></div>
+            <div class="card"><div class="label">Total Reporting</div><div id="dashReporting" class="number">0</div><div class="small">dokumen tersimpan</div></div>
+            <div class="card"><div class="label">Total Biaya Pengajuan</div><div id="dashBiayaPengajuan" class="number">Rp 0</div><div class="small">akumulasi semua pengajuan</div></div>
+            <div class="card"><div class="label">Total Biaya Reporting</div><div id="dashBiayaReporting" class="number">Rp 0</div><div class="small">akumulasi semua reporting</div></div>
+          </div>
+          <div class="panel"><h3>Aktivitas Terbaru</h3><div id="recentHistory" class="history-list"><div class="empty">Belum ada aktivitas.</div></div></div>
+        </section>
+
+        <section id="page-pengajuan" class="page hidden">
+          <div class="page-head"><div><h2>Data Pengajuan</h2><p class="muted">Buat, ubah, lihat, dan unduh dokumen pengajuan.</p></div><button class="btn-primary" onclick="newDocument('pengajuan')">+ Buat Pengajuan</button></div>
+          <div class="panel"><div class="filters" style="margin-bottom:14px"><input id="searchPengajuan" placeholder="Cari proyek / jenis pengajuan..." oninput="renderDocuments('pengajuan')"><button class="btn-secondary" onclick="loadDocuments('pengajuan')">Muat ulang</button></div><div id="tablePengajuan" class="table-wrap"></div></div>
+        </section>
+
+        <section id="page-reporting" class="page hidden">
+          <div class="page-head"><div><h2>Data Reporting</h2><p class="muted">Buat laporan kegiatan atau biaya proyek.</p></div><button class="btn-primary" onclick="newDocument('reporting')">+ Buat Reporting</button></div>
+          <div class="panel"><div class="filters" style="margin-bottom:14px"><input id="searchReporting" placeholder="Cari proyek / jenis reporting..." oninput="renderDocuments('reporting')"><button class="btn-secondary" onclick="loadDocuments('reporting')">Muat ulang</button></div><div id="tableReporting" class="table-wrap"></div></div>
+        </section>
+
+        <section id="page-history" class="page hidden">
+          <div class="page-head"><div><h2>History Aktivitas</h2><p class="muted">Riwayat input, perubahan, penghapusan, login, dan unduhan PDF.</p></div><button class="btn-secondary" onclick="loadDashboard()">Muat ulang</button></div>
+          <div class="panel"><div id="allHistory" class="table-wrap"><div class="empty">Memuat history...</div></div></div>
+        </section>
+
+        <section id="page-form" class="page hidden">
+          <div class="page-head"><div><h2 id="formHeading">Buat Dokumen</h2><p class="muted">Isi data utama, tambahkan detail sebanyak yang dibutuhkan, lalu simpan.</p></div><button class="btn-secondary" onclick="showPage(currentType)">← Kembali</button></div>
+          <form id="documentForm" class="panel">
+            <input id="docId" type="hidden">
+            <div class="form-title" style="margin-top:0">Informasi Dokumen</div>
+            <div class="form-grid">
+              <div class="field"><label>Nama Proyek *</label><input id="namaProyek" required placeholder="Contoh: Proyek Perumahan A"></div>
+              <div class="field"><label>Tanggal *</label><input id="tanggal" type="date" required></div>
+              <div class="field"><label id="jenisLabel">Jenis Pengajuan *</label><input id="jenis" required placeholder="Contoh: Operasional, Produksi, Pembelian"></div>
+              <div class="field full"><label>Deskripsi *</label><textarea id="deskripsi" required placeholder="Jelaskan tujuan pengajuan atau ringkasan laporan..."></textarea></div>
+              <div class="field full"><label>Logo Proyek (opsional)</label><div class="logo-row"><div id="logoPreview" class="logo-preview">Pratinjau logo</div><div style="flex:1"><input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp"><div class="help">Logo akan muncul di pojok kanan dokumen PDF. Disarankan gambar kecil (maksimal sekitar 700 KB).</div><button type="button" class="btn-secondary btn-small" style="margin-top:8px" onclick="clearLogo()">Hapus logo</button></div></div></div>
+            </div>
+            <div class="form-title">Detail Data / Rincian Biaya</div>
+            <p class="muted">Tambahkan lebih dari satu baris jika satu dokumen memiliki banyak kebutuhan atau rincian biaya. Total dihitung otomatis dari jumlah × biaya satuan.</p>
+            <div class="table-wrap"><table class="item-table"><thead><tr><th>Nama detail *</th><th>Jumlah</th><th>Biaya satuan (Rp)</th><th>Keterangan</th><th>Subtotal</th><th></th></tr></thead><tbody id="itemsBody"></tbody></table></div>
+            <button type="button" class="btn-secondary btn-small" style="margin-top:12px" onclick="addItemRow()">+ Tambah detail</button>
+            <div id="totalBox" class="total-box">Total Biaya: Rp 0</div>
+            <div class="form-title">Tanda Tangan</div>
+            <div class="sign-grid">
+              <div class="signature-box"><label>Tanda tangan yang mengajukan</label><canvas id="sigApplicant" class="signature-canvas"></canvas><button type="button" class="btn-secondary btn-small" onclick="clearSignature('sigApplicant')">Bersihkan tanda tangan</button></div>
+              <div class="signature-box"><label>Tanda tangan disetujui</label><canvas id="sigApprover" class="signature-canvas"></canvas><button type="button" class="btn-secondary btn-small" onclick="clearSignature('sigApprover')">Bersihkan tanda tangan</button><div class="help">Kolom ini dapat ditandatangani oleh pihak yang menyetujui.</div></div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap"><button type="button" class="btn-secondary" onclick="showPage(currentType)">Batal</button><button type="submit" class="btn-primary">Simpan Dokumen</button></div>
+          </form>
+        </section>
+
+        <section id="page-password" class="page hidden">
+          <div class="page-head"><div><h2>Ganti Password</h2><p class="muted">Gunakan password baru minimal 10 karakter.</p></div></div>
+          <form id="passwordForm" class="panel" style="max-width:520px">
+            <div class="field"><label>Password saat ini</label><input id="currentPassword" type="password" required></div>
+            <div class="field"><label>Password baru</label><input id="newPassword" type="password" minlength="10" required></div>
+            <div class="field"><label>Ulangi password baru</label><input id="confirmPassword" type="password" minlength="10" required></div>
+            <button class="btn-primary" type="submit">Ganti Password</button>
+          </form>
+        </section>
+      </div>
+    </main>
+  </section>
+  <div id="toast" class="toast hidden"></div>
+
+<script>
+  let token = sessionStorage.getItem('appToken') || '';
+  let currentUser = sessionStorage.getItem('appUsername') || '';
+  let currentType = 'pengajuan';
+  let documents = {pengajuan:[], reporting:[]};
+  let logoDataUrl = '';
+  let signatureData = {sigApplicant:'', sigApprover:''};
+  let signatureDrawing = {};
+  let historyCache = [];
+
+  const $ = id => document.getElementById(id);
+  const money = value => 'Rp ' + Number(value || 0).toLocaleString('id-ID', {maximumFractionDigits:0});
+  const escapeHtml = value => String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const showToast = message => { $('toast').textContent=message; $('toast').classList.remove('hidden'); setTimeout(()=>$('toast').classList.add('hidden'),3500); };
+  const callServer = (fn, ...args) => new Promise((resolve,reject)=>{
+    google.script.run.withSuccessHandler(resolve).withFailureHandler(err=>reject(new Error(err && err.message ? err.message : String(err))))[fn](...args);
+  });
+
+  function showLogin(){
+    $('loginScreen').classList.remove('hidden'); $('appScreen').classList.add('hidden');
+  }
+  function showApp(){
+    $('loginScreen').classList.add('hidden'); $('appScreen').classList.remove('hidden');
+    $('sideUsername').textContent=currentUser || '-'; showPage('dashboard'); loadDashboard();
+  }
+  $('loginForm').addEventListener('submit', async e=>{
+    e.preventDefault(); $('loginError').classList.add('hidden');
+    try{
+      const result=await callServer('login',$('loginUsername').value,$('loginPassword').value);
+      token=result.token; currentUser=result.username;
+      sessionStorage.setItem('appToken',token); sessionStorage.setItem('appUsername',currentUser);
+      $('loginPassword').value=''; showApp();
+    }catch(err){$('loginError').textContent=err.message;$('loginError').classList.remove('hidden');}
+  });
+  $('logoutBtn').addEventListener('click',async()=>{
+    try{if(token) await callServer('logout',token);}catch(e){}
+    token='';currentUser='';sessionStorage.removeItem('appToken');sessionStorage.removeItem('appUsername');showLogin();
+  });
+  document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+    showPage(btn.dataset.page);
+    if(btn.dataset.page==='dashboard'||btn.dataset.page==='history')loadDashboard();
+    if(btn.dataset.page==='pengajuan'||btn.dataset.page==='reporting')loadDocuments(btn.dataset.page);
+  }));
+  function showPage(page){
+    document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+    const target=$('page-'+page); if(target)target.classList.remove('hidden');
+    const titles={dashboard:'Dashboard',pengajuan:'Total Pengajuan',reporting:'Total Reporting',history:'History Aktivitas',password:'Ganti Password',form:'Form Dokumen'};
+    $('topTitle').textContent=titles[page]||'Pengajuan & Reporting';
+    if(page!=='form')currentType=(page==='reporting'?'reporting':'pengajuan');
+  }
+  async function loadDashboard(){
+    try{
+      const data=await callServer('getDashboard',token);
+      $('dashPengajuan').textContent=data.totalPengajuan;
+      $('dashReporting').textContent=data.totalReporting;
+      $('dashBiayaPengajuan').textContent=money(data.biayaPengajuan);
+      $('dashBiayaReporting').textContent=money(data.biayaReporting);
+      historyCache=data.recentHistory||[];
+      $('recentHistory').innerHTML=historyCache.length?historyCache.slice(0,6).map(historyHtml).join(''):'<div class="empty">Belum ada aktivitas.</div>';
+      $('allHistory').innerHTML=historyCache.length?`<table><thead><tr><th>Waktu</th><th>Pengguna</th><th>Aksi</th><th>Jenis</th><th>ID Dokumen</th><th>Proyek</th><th>Keterangan</th></tr></thead><tbody>${historyCache.map(h=>`<tr><td>${escapeHtml(h.timestamp)}</td><td>${escapeHtml(h.username)}</td><td>${escapeHtml(h.aksi)}</td><td>${escapeHtml(h.jenisDokumen)}</td><td>${escapeHtml(h.dokumenId)}</td><td>${escapeHtml(h.namaProyek)}</td><td>${escapeHtml(h.keterangan)}</td></tr>`).join('')}</tbody></table><p class="help">Dashboard menampilkan 10 aktivitas terakhir. Riwayat lengkap tetap tersimpan di sheet History pada spreadsheet.</p>`:'<div class="empty">Belum ada aktivitas.</div>';
+    }catch(err){handleError(err);}
+  }
+  function historyHtml(h){return `<div class="history-item"><div><strong>${escapeHtml(h.aksi)}</strong> · ${escapeHtml(h.namaProyek||h.jenisDokumen||'-')}<div class="help">${escapeHtml(h.keterangan||'')}</div></div><span class="muted">${escapeHtml(h.timestamp)}</span></div>`;}
+  async function loadDocuments(type){
+    try{documents[type]=await callServer('listDocuments',token,type);renderDocuments(type);}
+    catch(err){handleError(err);}
+  }
+  function renderDocuments(type){
+    const query=($('search'+cap(type)).value||'').toLowerCase();
+    const list=documents[type].filter(d=>(d.namaProyek+' '+d.jenis+' '+d.deskripsi+' '+d.id).toLowerCase().includes(query));
+    const target=$('table'+cap(type));
+    if(!list.length){target.innerHTML='<div class="empty">Belum ada dokumen. Klik tombol tambah untuk membuat dokumen baru.</div>';return;}
+    target.innerHTML=`<table><thead><tr><th>ID</th><th>Nama Proyek</th><th>Tanggal</th><th>Jenis</th><th>Total Biaya</th><th>Dibuat oleh</th><th>Aksi</th></tr></thead><tbody>${list.map(d=>`<tr><td>${escapeHtml(d.id)}</td><td><strong>${escapeHtml(d.namaProyek)}</strong><div class="help">${escapeHtml(d.deskripsi).slice(0,85)}</div></td><td>${escapeHtml(d.tanggal)}</td><td><span class="pill">${escapeHtml(d.jenis)}</span></td><td>${money(d.totalBiaya)}</td><td>${escapeHtml(d.username)}</td><td><div class="actions"><button class="btn-secondary btn-small" onclick="editDocument('${type}','${d.id}')">Lihat/Edit</button><button class="btn-primary btn-small" onclick="downloadPdf('${type}','${d.id}')">PDF</button><button class="btn-danger btn-small" onclick="removeDocument('${type}','${d.id}')">Hapus</button></div></td></tr>`).join('')}</tbody></table>`;
+  }
+  const cap = text => text.charAt(0).toUpperCase()+text.slice(1);
+  function newDocument(type){
+    currentType=type; $('documentForm').reset(); $('docId').value=''; logoDataUrl='';signatureData={sigApplicant:'',sigApprover:''};
+    $('logoPreview').innerHTML='Pratinjau logo';$('itemsBody').innerHTML='';addItemRow();
+    $('tanggal').value=new Date().toISOString().slice(0,10);
+    $('formHeading').textContent=type==='reporting'?'Buat Reporting':'Buat Pengajuan';
+    $('jenisLabel').textContent=type==='reporting'?'Jenis Reporting *':'Jenis Pengajuan *';
+    clearSignature('sigApplicant');clearSignature('sigApprover');showPage('form');
+  }
+  async function editDocument(type,id){
+    let doc=documents[type].find(d=>d.id===id);
+    if(!doc){await loadDocuments(type);doc=documents[type].find(d=>d.id===id);}
+    if(!doc)return;
+    currentType=type; $('documentForm').reset();$('docId').value=doc.id;
+    $('namaProyek').value=doc.namaProyek;$('tanggal').value=doc.tanggal;$('jenis').value=doc.jenis;$('deskripsi').value=doc.deskripsi;
+    logoDataUrl=doc.logoDataUrl||'';$('logoPreview').innerHTML=logoDataUrl?`<img src="${logoDataUrl}">`:'Pratinjau logo';
+    $('itemsBody').innerHTML='';(doc.items||[]).forEach(item=>addItemRow(item));if(!(doc.items||[]).length)addItemRow();
+    signatureData.sigApplicant=doc.ttdPengajuDataUrl||'';signatureData.sigApprover=doc.ttdPenyetujuDataUrl||'';
+    $('formHeading').textContent=type==='reporting'?'Lihat/Edit Reporting':'Lihat/Edit Pengajuan';
+    $('jenisLabel').textContent=type==='reporting'?'Jenis Reporting *':'Jenis Pengajuan *';
+    showPage('form');setTimeout(()=>{loadSignatureToCanvas('sigApplicant',signatureData.sigApplicant);loadSignatureToCanvas('sigApprover',signatureData.sigApprover);},100);
+  }
+  $('logoFile').addEventListener('change',e=>{
+    const file=e.target.files[0];if(!file)return;
+    if(file.size>700*1024){showToast('Ukuran gambar maksimal 700 KB.');e.target.value='';return;}
+    const reader=new FileReader();reader.onload=()=>{logoDataUrl=reader.result;$('logoPreview').innerHTML=`<img src="${logoDataUrl}">`;};reader.readAsDataURL(file);
+  });
+  function clearLogo(){logoDataUrl='';$('logoFile').value='';$('logoPreview').innerHTML='Pratinjau logo';}
+  function addItemRow(item={}){
+    const tr=document.createElement('tr');tr.className='item-row';
+    tr.innerHTML=`<td><input class="item-name" placeholder="Nama detail" value="${escapeHtml(item.nama||'')}" required></td><td><input class="item-qty" type="number" min="0" step="1" value="${Number(item.jumlah||1)}"></td><td><input class="item-price" type="number" min="0" step="1" value="${Number(item.harga||0)}"></td><td><input class="item-note" placeholder="Opsional" value="${escapeHtml(item.keterangan||'')}"></td><td class="subtotal">Rp 0</td><td><button type="button" class="btn-danger btn-small" title="Hapus baris">×</button></td>`;
+    tr.querySelectorAll('input').forEach(input=>input.addEventListener('input',calculateTotal));
+    tr.querySelector('button').addEventListener('click',()=>{tr.remove();if(!$('itemsBody').children.length)addItemRow();calculateTotal();});
+    $('itemsBody').appendChild(tr);calculateTotal();
+  }
+  function collectItems(){
+    return Array.from(document.querySelectorAll('.item-row')).map(tr=>({
+      nama:tr.querySelector('.item-name').value.trim(),
+      jumlah:Number(tr.querySelector('.item-qty').value||0),
+      harga:Number(tr.querySelector('.item-price').value||0),
+      keterangan:tr.querySelector('.item-note').value.trim()
+    })).filter(i=>i.nama||i.jumlah||i.harga||i.keterangan);
+  }
+  function calculateTotal(){
+    let total=0;
+    document.querySelectorAll('.item-row').forEach(tr=>{
+      const qty=Number(tr.querySelector('.item-qty').value||0),price=Number(tr.querySelector('.item-price').value||0),sub=qty*price;total+=sub;tr.querySelector('.subtotal').textContent=money(sub);
+    });
+    $('totalBox').textContent='Total Biaya: '+money(total);
+  }
+  $('documentForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const items=collectItems();
+    if(!items.length){showToast('Tambahkan minimal satu detail.');return;}
+    const payload={id:$('docId').value,namaProyek:$('namaProyek').value,tanggal:$('tanggal').value,jenis:$('jenis').value,deskripsi:$('deskripsi').value,items,logoDataUrl,ttdPengajuDataUrl:getSignatureData('sigApplicant'),ttdPenyetujuDataUrl:getSignatureData('sigApprover')};
+    try{
+      document.body.classList.add('loading');
+      const result=await callServer('saveDocument',token,currentType,payload);
+      showToast('Dokumen berhasil disimpan. Total: '+money(result.totalBiaya));
+      await loadDocuments(currentType);await loadDashboard();showPage(currentType);
+    }catch(err){handleError(err);}finally{document.body.classList.remove('loading');}
+  });
+  async function removeDocument(type,id){
+    if(!confirm('Yakin ingin menghapus dokumen ini? Penghapusan akan tercatat di history.'))return;
+    try{await callServer('deleteDocument',token,type,id);showToast('Dokumen dihapus.');await loadDocuments(type);await loadDashboard();}
+    catch(err){handleError(err);}
+  }
+  async function downloadPdf(type,id){
+    try{
+      showToast('Sedang membuat PDF...');
+      const result=await callServer('generatePdf',token,type,id);
+      const bytes=atob(result.base64);const arr=new Uint8Array(bytes.length);for(let i=0;i<bytes.length;i++)arr[i]=bytes.charCodeAt(i);
+      const blob=new Blob([arr],{type:result.mimeType});const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download=result.filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+      showToast('PDF berhasil dibuat.');loadDashboard();
+    }catch(err){handleError(err);}
+  }
+  function setupCanvas(id){
+    const canvas=$(id),ctx=canvas.getContext('2d');
+    const resize=()=>{
+      const rect=canvas.getBoundingClientRect(),ratio=window.devicePixelRatio||1;
+      const old=signatureData[id]||'';
+      canvas.width=Math.max(1,rect.width*ratio);canvas.height=Math.max(1,rect.height*ratio);
+      ctx.setTransform(ratio,0,0,ratio,0,0);ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#142b4d';
+      if(old)loadSignatureToCanvas(id,old);
+    };
+    let drawing=false;
+    const pos=e=>{const rect=canvas.getBoundingClientRect();return{x:e.clientX-rect.left,y:e.clientY-rect.top};};
+    canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(e.pointerId);const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+    canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+    const end=()=>{if(drawing){drawing=false;signatureData[id]=canvas.toDataURL('image/png');}};
+    canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
+    signatureDrawing[id]={resize,ctx};setTimeout(resize,50);
+  }
+  function clearSignature(id){signatureData[id]='';const canvas=$(id);if(!canvas)return;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);}
+  function getSignatureData(id){
+    const canvas=$(id);if(!canvas)return signatureData[id]||'';
+    const blank=document.createElement('canvas');blank.width=canvas.width;blank.height=canvas.height;
+    if(canvas.toDataURL()===blank.toDataURL())return '';
+    signatureData[id]=canvas.toDataURL('image/png');return signatureData[id];
+  }
+  function loadSignatureToCanvas(id,data){
+    const canvas=$(id);if(!canvas)return;
+    const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(!data){signatureData[id]='';return;}
+    const img=new Image();img.onload=()=>{const ratio=window.devicePixelRatio||1;ctx.drawImage(img,0,0,canvas.width/ratio,canvas.height/ratio);signatureData[id]=data;};img.src=data;
+  }
+  $('passwordForm').addEventListener('submit',async e=>{
+    e.preventDefault();if($('newPassword').value!==$('confirmPassword').value){showToast('Konfirmasi password baru belum sama.');return;}
+    try{await callServer('changePassword',token,$('currentPassword').value,$('newPassword').value);$('passwordForm').reset();showToast('Password berhasil diganti.');}
+    catch(err){handleError(err);}
+  });
+  function handleError(err){
+    const message=err&&err.message?err.message:String(err);
+    if(message.toLowerCase().includes('sesi login berakhir')){token='';sessionStorage.removeItem('appToken');showLogin();return;}
+    showToast(message);
+  }
+  setupCanvas('sigApplicant');setupCanvas('sigApprover');
+  if(token){showApp();}else{showLogin();}
+</script>
+</body>
+</html>
